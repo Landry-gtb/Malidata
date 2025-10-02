@@ -1,0 +1,61 @@
+# =========================
+# Core Backend
+# =========================
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+python-dotenv==1.0.1
+pydantic>=2.0,<3.0
+httpx==0.27.0
+requests==2.32.3
+
+# =========================
+# Database & Cache
+# =========================
+sqlalchemy==2.0.30
+psycopg2-binary==2.9.9
+redis==5.0.4
+
+# =========================
+# LangChain & Vector Store
+# =========================
+langchain==0.2.5
+langchain-community==0.2.5
+langchain-huggingface==0.0.3
+langchain-google-genai>=2.0        # ✅ Intégration officielle Gemini pour LangChain
+
+# ⚠️ NE PAS installer google-generativeai manuellement → conflit évité
+# langchain-google-genai installe automatiquement la version compatible
+
+faiss-cpu==1.8.0.post1
+sentence-transformers==2.7.0
+transformers==4.41.2
+
+# =========================
+# PyTorch (CPU-only, pour sentence-transformers)
+# =========================
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.2
+
+# =========================
+# PDF & Text Processing
+# =========================
+pypdf==4.2.0
+reportlab==4.2.0
+tqdm==4.66.4
+
+# =========================
+# Language Detection
+# =========================
+langdetect==1.0.9
+
+# =========================
+# Authentication & Security
+# =========================
+passlib[bcrypt]==1.7.4
+python-jose==3.3.0
+
+# =========================
+# Optional: Testing & Dev
+# =========================
+pytest==8.2.2
+black==24.4.2
