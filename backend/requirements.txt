@@ -1,0 +1,49 @@
+# =========================
+# Core Backend
+# =========================
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+python-dotenv==1.0.1
+pydantic>=2.0,<3.0
+
+# =========================
+# Cache Redis
+# =========================
+redis==5.0.4
+
+# =========================
+# LangChain Stack
+# =========================
+langchain==0.3.15
+langchain-core>=0.3.31,<0.4.0
+langchain-community==0.3.14
+langchain-text-splitters>=0.3.3,<0.4.0
+langchain-google-genai==2.0.8
+langchain-huggingface==0.1.2
+
+# Correction critique pour Gemini 1.5 Flash
+google-generativeai>=0.7.2
+
+# =========================
+# Vector Store & Embeddings (NOUVELLE CONFIGURATION)
+# =========================
+numpy<2.0
+
+# 1. Torch CPU
+torch==2.2.2 --index-url https://download.pytorch.org/whl/cpu
+
+# 2. LE CORRECTIF : On passe à des versions plus récentes mais SYNCHRONISÉES
+# Ces versions acceptent tokenizers >= 0.19 (donc compatible avec langchain-huggingface)
+# ET elles fonctionnent ensemble sans le NameError
+transformers==4.41.2
+accelerate==0.30.1
+sentence-transformers==3.0.1
+
+# 3. Moteur vectoriel
+faiss-cpu
+
+# =========================
+# PDF Loading & Generation
+# =========================
+pypdf
+reportlab==4.2.0

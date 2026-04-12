@@ -1,0 +1,247 @@
+{
+  "sections": [
+    {
+      "id": "identification",
+      "title": "Identification du patient",
+      "questions": [
+        {
+          "id": "q001",
+          "text": "Quel prénom ou pseudonyme souhaitez-vous utiliser ?",
+          "type": "text",
+          "required": true,
+          "sensitive": false,
+          "priority": 1
+        },
+        {
+          "id": "q002",
+          "text": "Quel est votre âge (en années) ?",
+          "type": "number",
+          "required": true,
+          "sensitive": false,
+          "priority": 2
+        },
+        {
+          "id": "q003",
+          "text": "Quel est votre sexe ?",
+          "type": "choice",
+          "required": true,
+          "sensitive": false,
+          "priority": 3,
+          "options": [
+            "Homme",
+            "Femme"
+          ]
+        },
+        {
+          "id": "q004",
+          "text": "Où résidez-vous actuellement (ville/pays) ?",
+          "type": "text",
+          "required": false,
+          "sensitive": false,
+          "priority": 4
+        },
+        {
+          "id": "q005",
+          "text": "Veuillez indiquer un numéro de téléphone (facultatif).",
+          "type": "phone",
+          "required": false,
+          "sensitive": true,
+          "priority": 5
+        }
+      ]
+    },
+    {
+      "id": "symptomes_non_compliques",
+      "title": "Symptômes non compliqués",
+      "questions": [
+        {
+          "id": "q006",
+          "text": "Avez-vous eu de la fièvre ces derniers jours ? (Oui/Non)",
+          "type": "yes_no",
+          "required": true,
+          "sensitive": false,
+          "priority": 6
+        },
+        {
+          "id": "q007",
+          "text": "Depuis combien de jours avez-vous de la fièvre ?",
+          "type": "text",
+          "required": true,
+          "priority": 7
+        },
+        {
+          "id": "q008",
+          "text": "Avez-vous ressenti des frissons ou sueurs ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 8
+        },
+        {
+          "id": "q009",
+          "text": "Avez-vous eu des maux de tête ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 9
+        },
+        {
+          "id": "q010",
+          "text": "Avez-vous eu des nausées ou vomissements ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 10
+        },
+        {
+          "id": "q011",
+          "text": "Vous sentez-vous fatigué(e) ou faible ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 11
+        }
+      ]
+    },
+    {
+      "id": "symptomes_graves",
+      "title": "Symptômes graves (alerte OMS)",
+      "questions": [
+        {
+          "id": "q012",
+          "text": "Avez-vous eu des convulsions récentes ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 12
+        },
+        {
+          "id": "q013",
+          "text": "Avez-vous eu des difficultés à respirer ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 13
+        },
+        {
+          "id": "q014",
+          "text": "Avez-vous perdu connaissance ou eu un état de confusion ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 14
+        },
+        {
+          "id": "q015",
+          "text": "Avez-vous eu des saignements inhabituels ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 15
+        },
+        {
+          "id": "q016",
+          "text": "Avez-vous eu une incapacité à boire, manger ou allaiter ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 16
+        }
+      ]
+    },
+    {
+      "id": "groupes_a_risques",
+      "title": "Groupes vulnérables",
+      "questions": [
+        {
+          "id": "q017",
+          "text": "Êtes-vous enceinte actuellement ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": true,
+          "priority": 17
+        },
+        {
+          "id": "q018",
+          "text": "Un enfant de moins de 5 ans dans votre foyer présente-t-il des symptômes ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 18
+        },
+        {
+          "id": "q019",
+          "text": "Souffrez-vous d'une maladie chronique ?",
+          "type": "choice",
+          "required": false,
+          "sensitive": false,
+          "priority": 19,
+          "options": [
+            "Aucune",
+            "Diabète",
+            "VIH",
+            "Drépanocytose",
+            "Autre"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contexte_transmission",
+      "title": "Contexte de transmission",
+      "questions": [
+        {
+          "id": "q020",
+          "text": "Avez-vous voyagé récemment dans une zone de paludisme ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": false,
+          "priority": 20
+        },
+        {
+          "id": "q021",
+          "text": "Si oui, précisez la région/pays et la date du retour.",
+          "type": "text",
+          "required": true,
+          "priority": 21
+        },
+        {
+          "id": "q022",
+          "text": "À quelle fréquence êtes-vous exposé(e) aux moustiques ?",
+          "type": "choice",
+          "required": false,
+          "sensitive": false,
+          "priority": 22,
+          "options": [
+            "Souvent",
+            "Parfois",
+            "Rarement",
+            "Jamais"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cloture_conversation",
+      "title": "Clôture",
+      "questions": [
+        {
+          "id": "q023",
+          "text": "Souhaitez-vous ajouter des informations pour le professionnel de santé ?",
+          "type": "text",
+          "required": false,
+          "sensitive": false,
+          "priority": 23
+        },
+        {
+          "id": "q024",
+          "text": "Autorisez-vous l’envoi de ce rapport au professionnel de santé ? (Oui/Non)",
+          "type": "yes_no",
+          "required": false,
+          "sensitive": true,
+          "priority": 24
+        }
+      ]
+    }
+  ]
+}
