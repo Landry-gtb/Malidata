@@ -1,14 +1,3 @@
-"""
-routers/rag.py v2
-══════════════════════════════════════════════════════════════
-Changements vs v1 (stub) :
-  - Injection de Request → accès à app.state.rag
-  - /query effectue une vraie recherche FAISS
-  - /health retourne l'état réel du pipeline (chunks, modèle)
-  - /report génère le rapport médical depuis la session Redis
-══════════════════════════════════════════════════════════════
-"""
-
 import logging
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
