@@ -2,10 +2,6 @@ services:
   redis:
     image: redis:7-alpine
     container_name: malaria_redis
-    # Port Redis NON exposé sur l'hôte — accessible uniquement
-    # par les services du réseau malaria_network (sécurité).
-    # Si tu as besoin d'inspecter Redis depuis ton PC :
-    #   docker exec -it malaria_redis redis-cli
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -18,7 +14,7 @@ services:
     build: ./backend
     container_name: malaria_backend
     environment:
-      # LLM — Groq (remplace Gemini)
+      # LLM — Groq 
       - GROQ_API_KEY=${GROQ_API_KEY}
 
       # Redis — variables lues séparément par SessionManager
