@@ -4,7 +4,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 export const chatAPI = {
 
-  // POST /api/chat/start — aucun body attendu en v2
+  // POST /api/chat/start 
   startSession: async () => {
     const response = await axios.post(`${API_BASE}/chat/start`);
     return response.data;
