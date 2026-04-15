@@ -9,10 +9,10 @@ function App() {
   const [loading, setLoading]         = useState(false);
   const [needsReport, setNeedsReport] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
-  const [step, setStep]               = useState(0);   // ← nouveau
-  const [total, setTotal]             = useState(10);  // ← nouveau
-  const [completed, setCompleted]     = useState(false); // ← nouveau
-  const [reportUrl, setReportUrl]     = useState(null);  // ← nouveau
+  const [step, setStep]               = useState(0);   
+  const [total, setTotal]             = useState(10);  
+  const [completed, setCompleted]     = useState(false); 
+  const [reportUrl, setReportUrl]     = useState(null);  
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -24,8 +24,6 @@ function App() {
   }, [messages]);
 
   // ── Déclenchement automatique du rapport ──────────────────────
-  // Quand needs_report passe à true, on génère le PDF immédiatement
-  // sans attendre que l'utilisateur clique.
   useEffect(() => {
     if (needsReport && sessionId && !reportUrl) {
       handleGenerateReport();
