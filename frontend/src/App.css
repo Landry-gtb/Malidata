@@ -264,9 +264,6 @@ body {
 .reset-btn:hover {
   background: rgba(255,255,255,0.3);
 }
-/* ══════════════════════════════════════════════
-   Ajouts App.css v2 — coller à la fin du fichier
-   ══════════════════════════════════════════════ */
 
 /* ── Barre de progression ───────────────────── */
 .progress-container {
