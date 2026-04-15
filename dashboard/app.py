@@ -39,4 +39,4 @@ with tab2:
     with col2:
         st.metric("Rapports", "8")
 
-st.sidebar.info("Dashboard Malidata v1.0")
+st.sidebar.info("Dashboard Malidata")
