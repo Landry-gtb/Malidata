@@ -1,18 +1,3 @@
-"""
-utils/pdf_utils.py v2
-══════════════════════════════════════════════════════════════
-Changements vs v1 :
-  #1  user_info['pseudonyme'] → user_info['nom']
-  #2  user_info['telephone']  → supprimé (non collecté en v2)
-  #3  6 champs médicaux ajoutés au PDF :
-        fievre · duree_symptomes · antecedents_malaria
-        medicaments_en_cours · zone_geographique · autres_symptomes
-  #4  Correspondance couleur urgence corrigée (casse insensible)
-  #5  Niveau "Critique" ajout couleur bordeaux
-  #6  Section 2 : tableau médical détaillé (toutes les réponses)
-══════════════════════════════════════════════════════════════
-"""
-
 from datetime import datetime
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -23,7 +8,6 @@ from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
 
 
 # ── Palette couleurs urgence ──────────────────────────────────────────
-# Clés en minuscules normalisées — insensible à la casse en entrée
 _URGENCE_COLORS = {
     "faible":   colors.HexColor("#27ae60"),   # vert
     "modéré":   colors.HexColor("#e67e22"),   # orange
@@ -57,17 +41,6 @@ def generate_medical_report_pdf(
     analysis: dict,
     session_id: str,
 ) -> None:
-    """
-    Génère un rapport PDF médical professionnel.
-
-    Paramètres
-    ----------
-    filepath    : chemin absolu du fichier PDF à créer
-    user_info   : dict issu de collected_data (champs v2)
-    responses   : liste de messages [{role, content}] issus de memory
-    analysis    : dict issu de analyze_symptoms_for_report()
-    session_id  : identifiant de session (pour traçabilité)
-    """
 
     doc = SimpleDocTemplate(
         filepath,
@@ -198,10 +171,10 @@ def generate_medical_report_pdf(
     story.append(Paragraph("1. INFORMATIONS PATIENT", styles["Heading2"]))
 
     patient_data = [
-        ["Nom / Prénom :",  _val(user_info, "nom")],     # v2 : "nom" (plus "pseudonyme")
+        ["Nom / Prénom :",  _val(user_info, "nom")],    
         ["Âge :",           f"{_val(user_info, 'age')} ans"],
         ["Sexe :",          _val(user_info, "sexe")],
-        # Téléphone supprimé — non collecté en v2 (données PII non justifiées)
+       
     ]
     story.append(_table(patient_data))
     story.append(Spacer(1, 0.8 * cm))
@@ -224,7 +197,7 @@ def generate_medical_report_pdf(
     story.append(Spacer(1, 0.8 * cm))
 
     # ════════════════════════════════════════════════════════════════
-    # SECTION 3 — RÉSUMÉ DES SYMPTÔMES (analyse LLM)
+    # SECTION 3 — RÉSUMÉ DES SYMPTÔMES (analyse par LLM)
     # ════════════════════════════════════════════════════════════════
     story.append(Paragraph("3. RÉSUMÉ DES SYMPTÔMES", styles["Heading2"]))
     story.append(Paragraph(_val(analysis, "resume_symptomes"), body_style))
