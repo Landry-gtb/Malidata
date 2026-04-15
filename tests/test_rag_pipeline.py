@@ -1,7 +1,3 @@
-"""
-Test du RAG Pipeline - Vérifier que tout fonctionne correctement
-"""
-
 import asyncio
 import os
 import sys
