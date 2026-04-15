@@ -1,17 +1,3 @@
-"""
-routers/reports.py v2
-══════════════════════════════════════════════════════════════
-Changements vs v1 :
-  #1  analyze_symptoms_for_report(user_info, responses)
-        → analyze_symptoms_for_report(session_id)
-  #2  Lecture Redis fragmentée (session:{id}:user_info + :history)
-        → SessionManager du pipeline (source de vérité unique)
-  #3  Path traversal sur /download/{filename} corrigé
-        → validation stricte : nom de fichier seulement, pas de chemin
-  #4  /list et /download injectent Request pour cohérence
-══════════════════════════════════════════════════════════════
-"""
-
 import os
 import logging
 from datetime import datetime
@@ -24,7 +10,7 @@ from pydantic import BaseModel
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# Dossier de stockage des PDFs — résolu de façon absolue
+# Dossier de stockage des PDFs 
 BASE_DIR  = Path(__file__).resolve().parent.parent
 REPORTS_DIR = BASE_DIR / "reports"
 REPORTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -56,10 +42,10 @@ def _safe_filename(filename: str) -> Path:
     Ex. valide   : rapport_malaria_abc123_20250101_120000.pdf
     Ex. invalide : ../../.env  ou  /etc/passwd
     """
-    # Extrait uniquement le dernier composant (basename)
+    # Extrait uniquement le dernier composant
     safe = Path(filename).name
 
-    # Refuse les noms qui ont été modifiés (indice de traversal)
+    # Refuse les noms qui ont été modifiés 
     if safe != filename:
         logger.warning(f"Tentative de path traversal bloquée : '{filename}'")
         raise HTTPException(status_code=400, detail="Nom de fichier invalide.")
@@ -87,7 +73,7 @@ async def generate_report(request: Request, req: GenerateReportRequest):
     """
     rag = _get_pipeline(request)
 
-    # ── 1. Lecture session via SessionManager (source de vérité v2) ──
+    # ── 1. Lecture session via SessionManager ──
     try:
         state = rag.session_manager.get(req.session_id)
     except Exception as e:
@@ -121,8 +107,6 @@ async def generate_report(request: Request, req: GenerateReportRequest):
         filename  = f"rapport_malaria_{req.session_id[:8]}_{timestamp}.pdf"
         filepath  = REPORTS_DIR / filename
 
-        # On passe collected_data et analysis — pdf_utils n'a plus
-        # besoin de relire Redis lui-même
         generate_medical_report_pdf(
             filepath=str(filepath),
             user_info=state["collected_data"],
@@ -148,7 +132,7 @@ async def generate_report(request: Request, req: GenerateReportRequest):
 def download_report(filename: str):
     """
     Télécharge un rapport PDF.
-    Validation stricte du nom de fichier — path traversal impossible.
+    Validation stricte du nom de fichier.
     """
     filepath = _safe_filename(filename)
 
