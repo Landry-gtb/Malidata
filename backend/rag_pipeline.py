@@ -1,25 +1,3 @@
-"""
-RAGPipeline v2.1 — Production
-═══════════════════════════════════════════════════════════════════
-Corrections appliquées vs v1 :
-  #1  DEMO_STATE global      → SessionManager Redis (session_id)
-  #2  validate_input (bool)  → _extract_entity (valeur réelle, LLM JSON-mode)
-  #3  Prompts verbeux        → PERSONA fixe + max_tokens=300
-  #4  RAG systématique       → RAG conditionnel (étapes 3 et 9 uniquement)
-  #5  Mélange tu/vous        → PERSONA impose le vouvoiement
-  #6  temperature=0.5        → 0.0 extraction / 0.1 réponse
-  #7  4 étapes seulement     → 10 étapes (3 identification + 7 médicales)
-  #8  Angle mort questions   → _detect_intent + _handle_user_question
-        Si l'utilisateur pose une question ou exprime une incompréhension,
-        le LLM répond et re-pose la même question (step inchangé).
-
-Breaking changes pour les routes FastAPI :
-  - generate_response(query, ...) → generate_response(session_id, query)
-  - analyze_symptoms_for_report(user_info, responses) → analyze_symptoms_for_report(session_id)
-  - Appel d'init : envoyer query="__INIT__" pour démarrer une session
-═══════════════════════════════════════════════════════════════════
-"""
-
 import os
 import json
 import logging
@@ -42,7 +20,6 @@ load_dotenv()
 
 # ═══════════════════════════════════════════════════════════════════
 # SECTION 1 — CONFIGURATION MÉTIER
-# Modifier uniquement cette section pour ajuster le questionnaire.
 # ═══════════════════════════════════════════════════════════════════
 
 STEPS: List[Dict] = [
@@ -81,7 +58,7 @@ STEPS: List[Dict] = [
         "phase": "medical",
         "question": "Quels symptômes vous ont amené(e) à consulter aujourd'hui ? Décrivez-les librement.",
         "followup": "Pourriez-vous décrire vos symptômes principaux en quelques mots ?",
-        "use_rag": True,   # RAG activé ici pour enrichir le contexte
+        "use_rag": True,   
     },
     {
         "id": 4,
@@ -145,7 +122,6 @@ STEPS: List[Dict] = [
 TOTAL_STEPS: int = len(STEPS)  # 10
 SESSION_TTL: int = 3600        # 1 heure
 
-# Persona injectée dans CHAQUE appel LLM — garantit le vouvoiement et la concision
 PERSONA: str = (
     "Tu es Malidata, un assistant de pré-consultation médicale pour la malaria. "
     "Règles STRICTES et NON NÉGOCIABLES : "
@@ -193,7 +169,7 @@ def _empty_session() -> Dict:
         "step": 0,
         "completed": False,
         "collected_data": {step["field"]: None for step in STEPS},
-        "memory": [],   # [{role: "user"|"assistant", content: "..."}]
+        "memory": [],   
     }
 
 
@@ -409,7 +385,7 @@ class RAGPipeline:
             "model": "llama-3.3-70b-versatile",
             "messages": messages,
             "temperature": temperature,
-            "max_tokens": 300,  # Intentionnellement bas — empêche les réponses essay
+            "max_tokens": 300,  
         }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
@@ -563,7 +539,7 @@ class RAGPipeline:
         )
 
         # Inclure l'historique récent pour que le LLM ait le contexte
-        recent_memory = state.get("memory", [])[-4:]  # 4 derniers messages max
+        recent_memory = state.get("memory", [])[-4:]  
 
         messages = (
             [{"role": "system", "content": system}]
@@ -585,7 +561,7 @@ class RAGPipeline:
 
         return {
             "answer":    answer,
-            "step":      current_idx,  # step inchangé — même étape
+            "step":      current_idx,  
             "total":     TOTAL_STEPS,
             "completed": False,
         }
@@ -597,28 +573,7 @@ class RAGPipeline:
     async def generate_response(
         self, session_id: str, query: str
     ) -> Dict:
-        """
-        Point d'entrée unique du pipeline conversationnel.
-
-        Paramètres
-        ----------
-        session_id : str
-            Identifiant unique de la session (fourni par le frontend).
-        query : str
-            Message de l'utilisateur, ou "__INIT__" pour démarrer une session.
-
-        Retourne
-        --------
-        Dict avec les clés :
-            answer       : str   — réponse à afficher
-            step         : int   — étape courante (0..TOTAL_STEPS)
-            total        : int   — nombre total d'étapes
-            completed    : bool  — questionnaire terminé
-            needs_report : bool  — présent et True si rapport à générer
-            sources      : list  — sources RAG (optionnel)
-            collected_data : dict — données collectées (présent si completed=True)
-        """
-
+        
         # ── CAS 1 : Initialisation de session ──────────────────────
         if query.strip() == "__INIT__":
             state = self.session_manager.reset(session_id)
@@ -672,7 +627,7 @@ class RAGPipeline:
 
         if not success:
             # Réponse courte prédéfinie — PAS de LLM pour les erreurs de validation
-            # → élimine la verbosité médicale observée en v1
+    
             logger.info(
                 f"[{session_id}] Extraction '{field}' échouée "
                 f"pour : '{query[:50]}'"
@@ -726,7 +681,7 @@ class RAGPipeline:
             rag_sources = rag_result.get("sources", [])
 
         # Prompt de confirmation + question suivante
-        # Le LLM confirme en 1 phrase, puis pose next_question mot pour mot.
+        # Le LLM confirme en 1 phrase, puis pose next_question mot pour mot
         confirmation_system = (
             f"{PERSONA}\n"
             "L'utilisateur vient de répondre. "
@@ -762,15 +717,7 @@ class RAGPipeline:
     async def analyze_symptoms_for_report(
         self, session_id: str
     ) -> Dict[str, Any]:
-        """
-        Génère un rapport médical structuré à partir des données collectées.
-
-        Paramètre
-        ---------
-        session_id : str — identifiant de la session Redis terminée.
-
-        Retourne un dict avec tous les champs du rapport PDF.
-        """
+       
         state = self.session_manager.get(session_id)
         data: Dict = state.get("collected_data", {})
 
@@ -830,7 +777,7 @@ class RAGPipeline:
                 risks = [risks]
             cleaned["facteurs_risque"] = risks
 
-            # Garantit que contact est toujours non renseigné (jamais de téléphone)
+            # Garantit que le contact est toujours non renseigné 
             cleaned["contact"] = "Non renseigné"
 
             return cleaned
