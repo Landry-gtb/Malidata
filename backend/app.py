@@ -1,13 +1,3 @@
-"""
-app.py v2
-══════════════════════════════════════════════════════════════
-Changements vs v1 :
-  - GEMINI_API_KEY → GROQ_API_KEY (unifié avec rag_pipeline.py)
-  - health_check retourne l'état réel du pipeline RAG
-  - Import reports gardé en placeholder (à fournir si existant)
-══════════════════════════════════════════════════════════════
-"""
-
 import os
 import logging
 from contextlib import asynccontextmanager
@@ -51,7 +41,7 @@ async def lifespan(app: FastAPI):
         logger.error(f"❌ Erreur RAG (bloquante) : {e}")
         raise
 
-    # 3. Vérification clé API — GROQ (cohérent avec rag_pipeline.py)
+    # 3. Vérification clé API — GROQ
     if not os.getenv("GROQ_API_KEY"):
         logger.warning("⚠️  GROQ_API_KEY manquante — le LLM sera indisponible.")
 
