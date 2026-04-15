@@ -1,21 +1,3 @@
-"""
-routers/chat.py v2
-══════════════════════════════════════════════════════════════
-Rôle UNIQUE : couche HTTP fine.
-Ce fichier ne contient AUCUNE logique métier, AUCUNE liste de
-questions, AUCUNE gestion d'état Redis.
-Toute l'intelligence est dans rag_pipeline.py.
-
-Changements vs v1 :
-  - Suppression de IDENTIFICATION_FIELDS (incluait "telephone")
-  - Suppression de MEDICAL_QUESTIONS (doublon avec STEPS[])
-  - Suppression de la state machine identification/feeling/medical
-  - /start  → génère un session_id + appelle pipeline("__INIT__")
-  - /message → transmet (session_id, message) au pipeline, retourne réponse
-  - /history → lecture Redis unifiée via SessionManager du pipeline
-══════════════════════════════════════════════════════════════
-"""
-
 import uuid
 import logging
 from fastapi import APIRouter, HTTPException, Request
